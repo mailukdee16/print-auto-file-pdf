@@ -1,0 +1,12 @@
+.buttonp{
+    padding:10px 40px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 15px;
+    line-height: 2.5;
+}
+.bth_red{
+    background: #F55;
+}

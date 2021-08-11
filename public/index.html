@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.css' rel='stylesheet' type='text/css'>
+        <link href="dist/css/style.min.css" rel="stylesheet">
+        <link href="src/app.css" rel="stylesheet">
+        
+
+            <!-- jQuery UI CSS -->
+        <title>Data Printer</title>
+    </head>
+<body>
+    <div class="container">
+        <div class="row">               
+            <div class="col-md-12">
+                <h2 align="center">แสดงผลข้อมูล</h2>
+                <div class="container-fluid">
+                    <div class="row">
+                        <label for="cono1" class="col-sm-1 text-right control-label col-form-label">StartDate</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dateStartdate" value="">
+                            </div>
+                        </div>
+                        <label for="cono1" class="col-sm-1 text-right control-label col-form-label">EndDate</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="dateEnddate" value="">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary" id="butSearch" onclick="_hypertensionListbydate()">Search</button>
+                            <h4></h4>
+                        </div>
+                    </div>
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Number</th>
+                                <th>Filename</th>
+                                <th>Printname</th>
+                                <th>Flag</th>
+                            </tr>
+                        </thead>
+                    </table>
+                 </div>
+            </div>
+        </div>
+    </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <script src=src/app.js></script>
+        <script>
+            $( document ).ready(function() {
+            console.log( "ready!" );
+            var m = new Date();
+            var dateString = m.getUTCFullYear() +"-"+ (m.getUTCMonth()+1) +"-"+ m.getUTCDate();
+            document.getElementById("dateStartdate").value = "2020" +"-01-01"; 
+
+            var twoenddate = m.getUTCDate()+"";if(twoenddate.length==1)	twoenddate="0" +twoenddate;
+            document.getElementById("dateEnddate").value = m.getUTCFullYear() +"-"+ (m.getUTCMonth()+1) +"-"+twoenddate;
+            var startdate = document.getElementById('dateStartdate').value;
+            var enddate = document.getElementById("dateEnddate").value;
+            $.ajax({
+                type:"GET",
+                url:"http://localhost:8000/data/" +startdate + '/' + enddate,
+                dataType:'json',})
+            $.ajax({
+                type:"GET",
+                url:"http://localhost:8000/data",
+                dataType:'json',
+                success: function (response) {
+                if (response == ""){
+                    document.getElementById('example').innerHTML = "";
+                } else {
+                    var datatable = $('#example').DataTable({
+                    "data": response,
+                    
+                "columns": [
+                    { "data": "job_date" },
+                    { "data": "job_number" },
+                    { "data": "print_file" },
+                    { "data": "print_name" },
+                    { "data": "print_flat" },
+                ],
+                })
+                }
+                }, error: function (jqXHR, xhr, ajaxOptions, thrownError) {
+                    console.log("failed, error is '" + thrownError + "'");
+                    alert("error is '" + thrownError + "'");
+            }}
+            )
+        })
+        </script>
+    </body>
+</html>
